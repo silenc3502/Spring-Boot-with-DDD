@@ -1,5 +1,6 @@
 package com.example.demo.dice.repository;
 
+import com.example.demo.dice.entity.Dice;
 import org.springframework.stereotype.Repository;
 
 // Spring Beans <<<
@@ -9,8 +10,21 @@ import org.springframework.stereotype.Repository;
 // 이것이 싱글톤이니까 알아서 RequiredArgsConstructor가 인식하도록 만드세요.
 @Repository
 public class DiceRepositoryImpl implements DiceRepository {
+    final int MIN = 1;
+    final int MAX = 6;
+
+    private int createdRandomNumber() {
+        int randomNumber = (int) (Math.random() * MAX) + MIN;
+        return randomNumber;
+    }
+
     @Override
-    public Integer rollDice() {
-        return null;
+    public Dice rollDice() {
+        int randomNumber = createdRandomNumber();
+        // python 생성자엔 new를 명시하지 않고 그냥 사용합니다.
+        // 반면 Java의 경우 new 키워드를 붙여서 사용해야 합니다.
+        Dice dice = new Dice(randomNumber);
+
+        return dice;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.demo.dice.controller;
 
+import com.example.demo.dice.entity.Dice;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,11 +27,11 @@ public class DiceController {
 
     // Spring Framework에서는 json 리턴 타입을 맞추려면 class 타입으로 리턴해야합니다
     @GetMapping("/roll-dice")
-    public Integer rollDice() {
+    public Dice rollDice() {
         log.info("rollDice() called");
 
-        Integer acquiredDiceNumber = diceService.rollDice();
+        Dice acquiredDice = diceService.rollDice();
 
-        return acquiredDiceNumber;
+        return acquiredDice;
     }
 }
