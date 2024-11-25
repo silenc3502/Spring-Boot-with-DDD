@@ -7,10 +7,13 @@ import lombok.Getter;
 // @Getter를 사용하여 getNumber() 매서드(함수)가 자동으로 생성됨
 @Getter
 public class Dice {
+    private static int idCounter = 0;
+    private final int id;
 
     private int number;
 
     public Dice(int number) {
+        this.id = ++idCounter;
         this.number = number;
     }
 }

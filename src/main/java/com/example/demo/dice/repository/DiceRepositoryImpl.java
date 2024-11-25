@@ -3,6 +3,10 @@ package com.example.demo.dice.repository;
 import com.example.demo.dice.entity.Dice;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 // Spring Beans <<<
 // Spring Core가 IoC Container를 관리하는데
 // @Controller, @Service, @Repository 붙은 애들이 결국 Beans
@@ -10,6 +14,8 @@ import org.springframework.stereotype.Repository;
 // 이것이 싱글톤이니까 알아서 RequiredArgsConstructor가 인식하도록 만드세요.
 @Repository
 public class DiceRepositoryImpl implements DiceRepository {
+    private static final List<Dice> diceList = new ArrayList<>();
+
     final int MIN = 1;
     final int MAX = 6;
 
@@ -19,12 +25,21 @@ public class DiceRepositoryImpl implements DiceRepository {
     }
 
     @Override
-    public Dice rollDice() {
+    public int rollDice() {
         int randomNumber = createdRandomNumber();
         // python 생성자엔 new를 명시하지 않고 그냥 사용합니다.
         // 반면 Java의 경우 new 키워드를 붙여서 사용해야 합니다.
         Dice dice = new Dice(randomNumber);
 
-        return dice;
+        diceList.add(dice);
+
+        return dice.getId();
+    }
+
+    @Override
+    public List<Dice> findByIdIn(List<Integer> diceIdList) {
+        return diceList.stream()
+                .filter(dice -> diceIdList.contains(dice.getId()))
+                .collect(Collectors.toList());
     }
 }
