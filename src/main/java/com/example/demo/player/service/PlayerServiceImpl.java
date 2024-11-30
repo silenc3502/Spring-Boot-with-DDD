@@ -6,14 +6,18 @@ import com.example.demo.player.controller.response_form.PlayerCreateResponseForm
 import com.example.demo.player.entity.Player;
 import com.example.demo.player.repository.PlayerRepository;
 import com.example.demo.player.service.request.PlayerCreateRequest;
+import com.example.demo.player.service.request.PlayerFindRequest;
 import com.example.demo.player.service.response.PlayerCreateResponse;
 import com.example.demo.player.service.response.PlayerListResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
@@ -28,7 +32,18 @@ public class PlayerServiceImpl implements PlayerService {
         return PlayerCreateResponse.from(createdPlayer);
     }
 
-//    @Override
+    @Override
+    public Player findPlayer(PlayerFindRequest playerFindRequest) {
+        Optional<Player> maybePlayer = playerRepository.findById(playerFindRequest.getPlayerId());
+        if (maybePlayer.isEmpty()) {
+            log.info("해당 playerId로 찾는 Player가 없습니다.");
+            return null;
+        }
+
+        return maybePlayer.get();
+    }
+
+    //    @Override
 //    public List<PlayerListResponse> listPlayer() {
 //        List<Player> playerList = playerRepository.findAll();
 //
