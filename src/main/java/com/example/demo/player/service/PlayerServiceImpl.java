@@ -43,15 +43,10 @@ public class PlayerServiceImpl implements PlayerService {
         return maybePlayer.get();
     }
 
-    //    @Override
-//    public List<PlayerListResponse> listPlayer() {
-//        List<Player> playerList = playerRepository.findAll();
-//
-//        return playerList.stream()
-//                .map(player -> {
-//                    List<Dice> diceList = diceRepository.findByIdIn(player.getDiceIdList());
-//                    return PlayerListResponse.from(player, diceList);  // Player와 Dice 객체들을 사용하여 PlayerListResponse 반환
-//                })
-//                .collect(Collectors.toList());
-//    }
+    @Override
+    public List<Player> listPlayer() {
+        List<Player> playerList = playerRepository.findAll();
+
+        return playerList;
+    }
 }

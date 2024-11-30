@@ -11,5 +11,5 @@ import java.util.List;
 public interface PlayerService {
     PlayerCreateResponse createPlayer(PlayerCreateRequest playerCreateRequest);
     Player findPlayer(PlayerFindRequest playerFindRequest);
-//    List<PlayerListResponse> listPlayer();
+    List<Player> listPlayer();
 }
