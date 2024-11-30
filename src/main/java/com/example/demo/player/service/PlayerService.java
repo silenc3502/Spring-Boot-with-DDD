@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface PlayerService {
     PlayerCreateResponse createPlayer(PlayerCreateRequest playerCreateRequest);
-    List<PlayerListResponse> listPlayer();
+//    List<PlayerListResponse> listPlayer();
 }
