@@ -50,11 +50,4 @@ public class GameController {
 
         return CheckGameResponseForm.from(response);
     }
-
-    @GetMapping("/roll-first-dice")
-    public boolean rollFirstDice() {
-        log.info("rollFirstDice() called");
-
-        return gameService.rollFirstDice();
-    }
 }
