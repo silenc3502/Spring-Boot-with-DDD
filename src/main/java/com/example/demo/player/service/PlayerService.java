@@ -1,7 +1,12 @@
 package com.example.demo.player.service;
 
-import com.example.demo.player.entity.Player;
+import com.example.demo.player.service.request.PlayerCreateRequest;
+import com.example.demo.player.service.response.PlayerCreateResponse;
+import com.example.demo.player.service.response.PlayerListResponse;
+
+import java.util.List;
 
 public interface PlayerService {
-    Player createPlayer();
+    PlayerCreateResponse createPlayer(PlayerCreateRequest playerCreateRequest);
+    List<PlayerListResponse> listPlayer();
 }

@@ -11,7 +11,7 @@ public class DiceServiceImpl implements DiceService {
     final private DiceRepository diceRepository;
 
     @Override
-    public Dice rollDice() {
+    public int rollDice() {
         return diceRepository.rollDice();
     }
 }

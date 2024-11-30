@@ -5,22 +5,33 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class PlayerRepositoryImpl implements PlayerRepository {
     static List<Player> playerList = new ArrayList<>();
 
-    final String playerNickname = "player0";
-    int playerCount = 0;
-
     @Override
-    public Player create() {
-        // nickname을 player01, player02, player 03 형태로 만들겠다는 뜻
-        String nickname = playerNickname + ++playerCount;
-        Player player = new Player(nickname);
-
+    public int create(Player player) {
         playerList.add(player);
 
-        return player;
+        if (player != null) {
+            return player.getId();
+        }
+
+        return 0;
+    }
+
+    @Override
+    public List<Player> findAll() {
+        return new ArrayList<>(playerList);
+    }
+
+    @Override
+    public List<Player> findByIdIn(List<Integer> playerIdList) {
+
+        return playerList.stream()
+                .filter(player -> playerIdList.contains(player.getId()))
+                .collect(Collectors.toList());
     }
 }
