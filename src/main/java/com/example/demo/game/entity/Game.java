@@ -1,24 +1,27 @@
 package com.example.demo.game.entity;
 
+import com.example.demo.player.entity.Player;
+import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Entity
 public class Game {
-    private static int idCounter = 0;
-    private final int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    private List<Integer> playerIdList;
-    private int winnerId;
+    private String state;
+    private int playerCount;
 
-    public Game(List<Integer> playerIdList) {
-        this.id = ++idCounter;
-        this.playerIdList = playerIdList;
-    }
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    public void setWinner(int winnerId) {
-        this.winnerId = winnerId;
-    }
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    public Game() {}
 }
