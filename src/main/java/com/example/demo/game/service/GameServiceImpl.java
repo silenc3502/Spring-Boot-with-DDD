@@ -1,52 +1,40 @@
-//package com.example.demo.game.service;
-//
-//
-//import com.example.demo.dice.repository.DiceRepository;
-//import com.example.demo.game.entity.Game;
-//import com.example.demo.game.repository.GameRepository;
-//import com.example.demo.game.service.request.CheckGameRequest;
-//import com.example.demo.game.service.request.RecordGameWinnerRequest;
-//import com.example.demo.game.service.response.CheckGameResponse;
-//import com.example.demo.game.service.response.CreateSimpleGameResponse;
-//import com.example.demo.game.service.response.RecordGameWinnerResponse;
-//import com.example.demo.player.entity.Player;
-//import com.example.demo.player.repository.PlayerRepository;
-//import com.example.demo.player.service.response.PlayerCreateResponse;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Optional;
-//
-//@Service
-//@RequiredArgsConstructor
-//public class GameServiceImpl implements GameService {
-//    final private GameRepository gameRepository;
-//    final private PlayerRepository playerRepository;
-//    final private DiceRepository diceRepository;
-//
-//    final int DRAW = -1;
-//
-//    @Override
-//    public CreateSimpleGameResponse createSimpleGame() {
-//        List<Player> playerList = playerRepository.findAll();
-//        List<Integer> playerIdList = new ArrayList<>();
-//
-//        for (Player player : playerList) {
-//            for (int i = 0; i < 3; i++) {
-//                int diceId = diceRepository.rollDice();
-//                player.addDiceId(diceId);
-//            }
-//
-//            playerIdList.add(player.getId());
-//        }
-//
-//        int gameId = gameRepository.create(playerIdList);
-//
-//        return CreateSimpleGameResponse.from(gameId);
-//    }
-//
+package com.example.demo.game.service;
+
+
+import com.example.demo.dice.repository.DiceRepository;
+import com.example.demo.game.entity.Game;
+import com.example.demo.game.entity.GameState;
+import com.example.demo.game.repository.GameRepository;
+import com.example.demo.game.service.request.CheckGameRequest;
+import com.example.demo.game.service.request.CreateGameRequest;
+import com.example.demo.game.service.request.RecordGameWinnerRequest;
+import com.example.demo.game.service.response.CheckGameResponse;
+import com.example.demo.game.service.response.CreateSimpleGameResponse;
+import com.example.demo.game.service.response.RecordGameWinnerResponse;
+import com.example.demo.player.entity.Player;
+import com.example.demo.player.repository.PlayerRepository;
+import com.example.demo.player.service.response.PlayerCreateResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class GameServiceImpl implements GameService {
+    final private GameRepository gameRepository;
+    final private PlayerRepository playerRepository;
+    final private DiceRepository diceRepository;
+
+    @Override
+    public CreateSimpleGameResponse createSimpleGame(CreateGameRequest createGameRequest) {
+        Game game = gameRepository.save(createGameRequest.toGame());
+
+        return CreateSimpleGameResponse.from(game.getId());
+    }
+
 //    private List<Player> findPotentialWinners(List<Player> playerList) {
 //        int highestSum = 0;
 //        List<Player> potentialWinners = new ArrayList<>();
@@ -121,4 +109,4 @@
 //
 //        return new CheckGameResponse("승자: " + winnerId);
 //    }
-//}
+}

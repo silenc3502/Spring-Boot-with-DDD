@@ -6,15 +6,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Entity
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String nickname;
 
