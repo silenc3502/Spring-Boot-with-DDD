@@ -14,7 +14,6 @@ public class Dice {
     private Long id;
 
     private Long number;
-    private Long playerId;
 
     public Dice(long number) {
         this.number = number;

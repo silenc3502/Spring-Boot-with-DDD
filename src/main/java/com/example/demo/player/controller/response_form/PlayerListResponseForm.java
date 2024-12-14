@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @RequiredArgsConstructor
 public class PlayerListResponseForm {
-    private final int id;
+    private final long id;
     private final String nickname;
     private final List<Dice> diceList;
 

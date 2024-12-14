@@ -1,12 +1,8 @@
 package com.example.demo.game.repository;
 
 import com.example.demo.game.entity.Game;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-import java.util.Optional;
+public interface GameRepository extends JpaRepository<Game, Long> {
 
-public interface GameRepository {
-    int create(List<Integer> playerIdList);
-    Optional<Game> findById(int gameId);
-    void recordGame(int gameId, int winnerId);
 }

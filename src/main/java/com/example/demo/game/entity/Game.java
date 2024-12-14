@@ -14,7 +14,9 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private GameState state;
+
     private int playerCount;
 
     @Column(name = "created_at")
@@ -24,4 +26,13 @@ public class Game {
     private LocalDateTime updatedAt;
 
     public Game() {}
+
+    public Game(int playerCount, GameState state) {
+        this.playerCount = playerCount;
+        this.state = state;
+    }
+
+    public void setStateFromValue(int value) {
+        this.state = GameState.fromValue(value);
+    }
 }

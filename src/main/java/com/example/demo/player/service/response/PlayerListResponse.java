@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Getter
 @RequiredArgsConstructor
 public class PlayerListResponse {
-    private final int id;
+    private final long id;
     private final String nickname;
     private final List<Dice> diceList;
 

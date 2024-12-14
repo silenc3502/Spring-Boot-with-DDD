@@ -11,7 +11,7 @@ import lombok.Getter;
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String nickname;
 
