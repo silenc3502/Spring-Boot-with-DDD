@@ -10,7 +10,8 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private CardName name;
 
     @Enumerated(EnumType.STRING)
     private CardPlacement placement;
@@ -20,7 +21,7 @@ public class Card {
 
     public Card() {}
 
-    public Card(String name, CardPlacement placement, CardStatusEffect statusEffect) {
+    public Card(CardName name, CardPlacement placement, CardStatusEffect statusEffect) {
         this.name = name;
         this.placement = placement;
         this.statusEffect = statusEffect;

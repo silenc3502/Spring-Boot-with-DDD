@@ -21,7 +21,8 @@ public class CardIllustration {
 
     public CardIllustration() {}
 
-    public CardIllustration(GraphicTexture graphicTexture) {
+    public CardIllustration(GraphicTexture graphicTexture, Card card) {
         this.graphicTexture = graphicTexture;
+        this.card = card;
     }
 }

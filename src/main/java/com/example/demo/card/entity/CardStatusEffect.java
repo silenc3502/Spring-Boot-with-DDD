@@ -1,6 +1,7 @@
 package com.example.demo.card.entity;
 
 public enum CardStatusEffect {
+    NORMAL(0),
     BURN(1),         // 화상
     FREEZE(2),       // 빙결
     STUN(3),         // 스턴
