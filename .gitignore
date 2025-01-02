@@ -192,3 +192,6 @@ replay_pid*
 
 # exclude .DS_Store
 *.DS_Store
+
+# exclude .env
+.env
