@@ -7,6 +7,7 @@ import com.example.demo.board.controller.request_form.CreateBoardRequestForm;
 import com.example.demo.board.entity.Board;
 import com.example.demo.board.service.BoardService;
 import com.example.demo.board.service.response.ListBoardResponse;
+import com.example.demo.board.service.response.ReadBoardResponse;
 import com.example.demo.kakao_authentication.service.KakaoAuthenticationService;
 import com.example.demo.redis_cache.service.RedisCacheService;
 import lombok.RequiredArgsConstructor;
@@ -42,17 +43,17 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}")
-    public Board readBoard (@PathVariable("boardId") Long boardId) {
+    public ReadBoardResponse readBoard (@PathVariable("boardId") Long boardId) {
         log.info("boardRead()");
 
         return boardService.read(boardId);
     }
 
     @DeleteMapping("/{boardId}")
-    public void deleteBoard (@PathVariable("boardId") Long boardId) {
-        log.info("boardRead()");
+    public boolean deleteBoard (@PathVariable("boardId") Long boardId) {
+        log.info("deleteBoard()");
 
-        boardService.delete(boardId);
+        return boardService.delete(boardId);
     }
 
 //    @PutMapping("/{boardId}")
