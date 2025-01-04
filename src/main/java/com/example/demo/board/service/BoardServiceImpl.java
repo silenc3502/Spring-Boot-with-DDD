@@ -7,15 +7,21 @@ import com.example.demo.account_profile.repository.AccountProfileRepository;
 import com.example.demo.board.entity.Board;
 import com.example.demo.board.repository.BoardRepository;
 import com.example.demo.board.service.request.CreateBoardRequest;
+import com.example.demo.board.service.request.ListBoardRequest;
+import com.example.demo.board.service.request.ModifyBoardRequest;
 import com.example.demo.board.service.response.ListBoardResponse;
+import com.example.demo.board.service.response.ModifyBoardResponse;
 import com.example.demo.board.service.response.ReadBoardResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,14 +31,32 @@ public class BoardServiceImpl implements BoardService {
     final private AccountRepository accountRepository;
     final private AccountProfileRepository accountProfileRepository;
 
-    @Override
-    public List<ListBoardResponse> list() {
-        List<Board> boardList = boardRepository.findAllWithWriter();
-        log.info("boardList: {}", boardList);
+//    @Override
+//    public ListBoardResponse list(ListBoardRequest request) {
+//        // PageRequest 생성 (0부터 시작하는 페이지 인덱스를 위해 page - 1을 사용)
+//        PageRequest pageRequest = PageRequest.of(request.getPage() - 1, request.getPerPage());
+//
+//        // 페이징된 게시글 목록을 가져오기
+//        Page<Board> boardPage = boardRepository.findAllWithWriter(pageRequest);
+//
+//        // 페이지네이션된 게시글을 ListBoardResponse로 변환
+//        List<ListBoardResponse> boardList = boardPage.getContent().stream()
+//                .map(ListBoardResponse::from)  // ListBoardResponse로 변환
+//                .toList();
+//
+//        return boardList;
+//    }
 
-        return boardList.stream()
-                .map(ListBoardResponse::from) // 정적 메서드 사용
-                .toList();
+    @Override
+    public ListBoardResponse list(ListBoardRequest request) {
+        // PageRequest 생성 (0부터 시작하는 페이지 인덱스를 위해 page - 1을 사용)
+        PageRequest pageRequest = PageRequest.of(request.getPage() - 1, request.getPerPage());
+
+        // 페이징된 게시글 목록을 가져오기
+        Page<Board> boardPage = boardRepository.findAllWithWriter(pageRequest);
+
+        // ListBoardResponse 객체로 변환하여 반환
+        return new ListBoardResponse(boardPage.getContent(), boardPage.getTotalElements(), boardPage.getTotalPages());
     }
 
     @Override
@@ -63,18 +87,45 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public boolean delete(Long boardId) {
-        // 먼저 게시글이 존재하는지 확인
+        // 게시글 존재 여부 확인
         Optional<Board> maybeBoard = boardRepository.findById(boardId);
-        if (maybeBoard.isPresent()) {
-            // 존재한다면 삭제
-            boardRepository.deleteById(boardId);
-            return !boardRepository.existsById(boardId);  // 삭제 후 존재하지 않으면 true 반환
+        if (maybeBoard.isEmpty()) {
+            return false; // 존재하지 않으면 false 반환
         }
-        return false;  // 존재하지 않으면 false 반환
+
+        // 삭제 수행
+        boardRepository.deleteById(boardId);
+
+        // 삭제 후 검증
+        return !boardRepository.existsById(boardId);
     }
 
-//    @Override
-//    public Board modify(Long boardId, RequestBoardForm requestBoardForm) {
-//        return null;
-//    }
+    @Override
+    public ModifyBoardResponse modify(Long boardId, Long accountId, ModifyBoardRequest modifyBoardRequest) {
+        Board board = boardRepository.findByIdWithWriter(boardId)
+                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+
+        // 작성자 검증
+        log.info("board.getWriter(): {}", board.getWriter());
+        log.info("board.getWriter().getAccount(): {}", board.getWriter().getAccount());
+        log.info("board.getWriter().getAccount().getId(): {}", board.getWriter().getAccount().getId());
+
+        log.info("accountId: {}", accountId);
+
+        if (board.getWriter().getAccount().getId() != accountId) {
+            throw new RuntimeException("수정 권한이 없습니다.");
+        }
+
+        // 수정 작업 수행
+        if (modifyBoardRequest.getTitle() != null) {
+            board.setTitle(modifyBoardRequest.getTitle());
+        }
+        if (modifyBoardRequest.getContent() != null) {
+            board.setContent(modifyBoardRequest.getContent());
+        }
+
+        boardRepository.save(board);
+
+        return ModifyBoardResponse.from(board);
+    }
 }

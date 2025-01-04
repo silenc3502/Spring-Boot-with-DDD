@@ -28,14 +28,14 @@ public class KakaoAuthenticationController {
     final private AccountProfileService accountProfileService;
     final private RedisCacheService redisCacheService;
 
-    @PostMapping("/get-login-link")
+    @PostMapping("/request-login-url")
     public String requestGetLoginLink() {
         log.info("requestGetLoginLink() called");
 
         return kakaoAuthenticationService.getLoginLink();
     }
 
-    @PostMapping("/get-access-token")
+    @PostMapping("/request-access-token")
     @Transactional
     public String requestAccessToken(@RequestBody AccessTokenRequestForm accessTokenRequestForm) {
         String code = accessTokenRequestForm.getCode();
@@ -47,10 +47,15 @@ public class KakaoAuthenticationController {
             String accessToken = (String) tokenResponse.get("access_token");
 
             Map<String, Object> userInfo = kakaoAuthenticationService.requestUserInfo(accessToken);
+            log.info("userInfo: {}", userInfo);
+
             String nickname = (String) ((Map) userInfo.get("properties")).get("nickname");
             String email = (String) ((Map) userInfo.get("kakao_account")).get("email");
+            log.info("email: {}", email);
 
             Account account = accountService.findAccountByEmail(email);
+            log.info("account: {}", account);
+
             if (account == null) {
                 account = accountService.createAccount(email);
                 accountProfileService.createAccountProfile(account, nickname);

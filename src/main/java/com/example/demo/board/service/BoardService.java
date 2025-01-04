@@ -2,13 +2,16 @@ package com.example.demo.board.service;
 
 import com.example.demo.board.entity.Board;
 import com.example.demo.board.service.request.CreateBoardRequest;
+import com.example.demo.board.service.request.ListBoardRequest;
+import com.example.demo.board.service.request.ModifyBoardRequest;
 import com.example.demo.board.service.response.ListBoardResponse;
+import com.example.demo.board.service.response.ModifyBoardResponse;
 import com.example.demo.board.service.response.ReadBoardResponse;
 
 import java.util.List;
 
 public interface BoardService {
-    List<ListBoardResponse> list();
+    ListBoardResponse list(ListBoardRequest request);
 
     Board register(CreateBoardRequest createBoardRequest);
 
@@ -16,5 +19,5 @@ public interface BoardService {
 
     public boolean delete(Long boardId);
 
-//    Board modify(Long boardId, RequestBoardForm requestBoardForm);
+    ModifyBoardResponse modify(Long boardId, Long accountId, ModifyBoardRequest modifyBoardRequest);
 }

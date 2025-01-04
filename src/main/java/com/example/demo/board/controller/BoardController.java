@@ -4,9 +4,13 @@ import com.example.demo.account.service.AccountService;
 import com.example.demo.account_profile.entity.AccountProfile;
 import com.example.demo.account_profile.service.AccountProfileService;
 import com.example.demo.board.controller.request_form.CreateBoardRequestForm;
+import com.example.demo.board.controller.request_form.ListBoardRequestForm;
+import com.example.demo.board.controller.request_form.ModifyBoardRequestForm;
+import com.example.demo.board.controller.response_form.ListBoardResponseForm;
 import com.example.demo.board.entity.Board;
 import com.example.demo.board.service.BoardService;
 import com.example.demo.board.service.response.ListBoardResponse;
+import com.example.demo.board.service.response.ModifyBoardResponse;
 import com.example.demo.board.service.response.ReadBoardResponse;
 import com.example.demo.kakao_authentication.service.KakaoAuthenticationService;
 import com.example.demo.redis_cache.service.RedisCacheService;
@@ -15,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -22,14 +27,19 @@ import java.util.List;
 @RequestMapping("/board")
 public class BoardController {
     final private BoardService boardService;
-    final private AccountProfileService accountProfileService;
     final private RedisCacheService redisCacheService;
 
     @GetMapping("/list")
-    public List<ListBoardResponse> boardList () {
-        log.info("boardList()");
+    public ListBoardResponseForm boardList(@ModelAttribute ListBoardRequestForm requestForm) {
+        log.info("boardList() -> {}", requestForm);
 
-        return boardService.list();
+        ListBoardResponse response = boardService.list(requestForm.toListBoardRequest());
+
+        return ListBoardResponseForm.from(
+                List.of(response),  // 하나의 ListBoardResponse 객체를 List로 감싸서 전달
+                (int) response.getTotalItems(),
+                response.getTotalPages()
+        );
     }
 
     @PostMapping("/create")
@@ -51,16 +61,24 @@ public class BoardController {
 
     @DeleteMapping("/{boardId}")
     public boolean deleteBoard (@PathVariable("boardId") Long boardId) {
-        log.info("deleteBoard()");
+        log.info("deleteBoard() - boardId: {}", boardId);
 
-        return boardService.delete(boardId);
+        boolean isDeleted = boardService.delete(boardId);
+
+        if (!isDeleted) {
+            throw new RuntimeException("게시글이 존재하지 않거나 이미 삭제되었습니다.");
+        }
+
+        return true;
     }
 
-//    @PutMapping("/{boardId}")
-//    public Board modifyBoard (@PathVariable("boardId") Long boardId,
-//                                 @RequestBody RequestBoardForm requestBoardForm) {
-//        log.info("modifyBoard(): " + requestBoardForm + ", id: " + boardId);
-//
-//        return boardService.modify(boardId, requestBoardForm);
-//    }
+    @PutMapping("/{boardId}")
+    public ModifyBoardResponse modifyBoard (@PathVariable("boardId") Long boardId,
+                                            @RequestBody ModifyBoardRequestForm modifyBoardRequestForm) {
+        log.info("modifyBoard(): " + modifyBoardRequestForm + ", id: " + boardId);
+
+        Long accountId = redisCacheService.getValueByKey(modifyBoardRequestForm.getUserToken());
+
+        return boardService.modify(boardId, accountId, modifyBoardRequestForm.toModifyBoardRequest());
+    }
 }
