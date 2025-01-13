@@ -54,7 +54,7 @@ public class BoardController {
 
     @GetMapping("/{boardId}")
     public ReadBoardResponse readBoard (@PathVariable("boardId") Long boardId) {
-        log.info("boardRead()");
+        log.info("boardRead(): {}", boardId);
 
         return boardService.read(boardId);
     }

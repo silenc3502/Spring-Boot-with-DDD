@@ -18,7 +18,7 @@ public class ListBoardResponseForm {
     // from 메서드를 추가하여 ListBoardResponseForm을 생성
     public static ListBoardResponseForm from(List<ListBoardResponse> boardListResponses, int totalItems, int totalPages) {
         // 모든 ListBoardResponse 객체의 boardListWithNicknames 값을 하나로 결합
-        List<Map<String, Object>> combinedBoardList = boardListResponses.stream()
+        List<Map<String, Object>> combinedBoardList = boardListResponses.stream() // [0]
                 .flatMap(response -> response.getBoardListWithNicknames().stream())  // 각 ListBoardResponse의 getBoardListWithNicknames 호출
                 .collect(Collectors.toList());
 
