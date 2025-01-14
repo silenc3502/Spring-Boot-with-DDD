@@ -42,7 +42,9 @@ jobs:
 
       ## gradle build
       - name: Build with Gradle
-        run: ./gradlew clean build -x test
+        run: |
+          ls
+          ./gradlew clean build -x test
 
       ## docker build & push to production
       - name: Docker build & push to prod
