@@ -55,6 +55,10 @@ jobs:
             docker buildx create --name arm64builder --use
             docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile -t ghcr.io/${{ github.actor }}/spring-backend:latest --push .
             docker logout
+
+      - name: Remove Github Actions IP From Security Group
+        run: |
+          aws ec2 revoke-security-group-ingress --group-id ${{secrets.AWS_SG_ID}} --protocol tcp --port 22
           
   deploy:
     needs: build
